@@ -8,6 +8,7 @@ RUN curl https://glide.sh/get | sh
 
 RUN cd /go/src/github.com/DiamondYuan/image-cleaner && \
     glide install && \
+    go test && \
 	go build
 
 FROM alpine

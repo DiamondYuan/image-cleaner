@@ -30,7 +30,7 @@ type Image struct {
 
 var dryRun bool
 var notWait bool
-var infinite  bool
+var infinite bool
 var whiteList []string
 
 func init() {
@@ -62,7 +62,7 @@ func main() {
 
 }
 
-func clean()  {
+func clean() {
 	log.Printf("以下镜像会被删除")
 	list, _ := cli.ImageList(ctx, types.ImageListOptions{
 		All: true,
@@ -103,13 +103,6 @@ func clean()  {
 		}
 	}
 }
-
-
-
-
-
-
-
 
 func inWhiteList(image Image) bool {
 	for _, node := range whiteList {
