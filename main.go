@@ -30,13 +30,12 @@ type Image struct {
 
 var dryRun bool
 var notWait bool
-var infinite bool
+
 var whiteList []string
 
 func init() {
 	flag.BoolVar(&dryRun, "dryRun", false, "just list containers to remove")
 	flag.BoolVar(&notWait, "notWait", false, "Don't Wait")
-	flag.BoolVar(&infinite, "infinite", false, "Infinite run")
 	flag.Parse()
 	if os.Getenv("DOCKER_HOST") == "" {
 		err := os.Setenv("DOCKER_HOST", "unix:///var/run/docker.sock")
@@ -49,17 +48,6 @@ func init() {
 
 func main() {
 	clean()
-	if !infinite {
-		os.Exit(0)
-	}
-	ticker := time.NewTicker(time.Second * 10)
-	go func() {
-		for _ = range ticker.C {
-			clean()
-		}
-	}()
-	select {}
-
 }
 
 func clean() {
@@ -95,8 +83,8 @@ func clean() {
 	for _, node := range imagesToClean {
 		log.Printf("Clean %s   %s", node.RepoTags, node.ID)
 		_, err := cli.ImageRemove(ctx, node.ID, types.ImageRemoveOptions{
-			Force:         false,
-			PruneChildren: false,
+			Force:         true,
+			PruneChildren: true,
 		})
 		if err != nil {
 			log.Println(err)
